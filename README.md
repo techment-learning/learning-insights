@@ -91,7 +91,39 @@ https://YOUR_USERNAME.github.io/learning-insights/
 Anyone with that link can open it, pick a profile (or create the first
 admin account), and start using it.
 
-## Local development (optional)
+## 5. Set up email + password sign-in
+
+This app uses Supabase's built-in email/password authentication — no
+separate identity provider to register or configure.
+
+1. In your Supabase project: **Authentication → Providers**. Confirm **Email** is enabled (it is by default).
+2. **Authentication → URL Configuration.** Set **Site URL** to your GitHub Pages URL (`https://YOUR_USERNAME.github.io/learning-insights/`), and add the same URL under **Redirect URLs** — this is where password-reset links send people back to.
+3. By default, Supabase requires people to click a confirmation link in their email before their account is usable — that's built in already, nothing to configure. If you'd rather skip that (not recommended for anything beyond quick testing), it's under **Authentication → Providers → Email → "Confirm email"**.
+
+### Restricting who can sign up
+
+The app checks the email domain in code (`src/App.jsx`, the
+`ALLOWED_EMAIL_DOMAIN` constant near the top — currently set to
+`"techment.com"`). Change it to your real domain, or set it to `""` to
+allow any email. This is a simple client-side check, not enforced by
+Supabase itself — anyone who can receive mail at a matching address can
+still sign up, since the confirmation email is the real gate.
+
+### How accounts work now
+
+Anyone can create their own account by signing up with an email and
+password. The **first person ever to sign up becomes the admin**
+automatically; everyone after that starts as a **learner** — an admin can
+promote or demote anyone from the Users tab (click their role badge to
+toggle it). Admins can still use "Add user" to pre-create an account by
+email before someone signs up themselves, useful for enrolling them into a
+training in advance; when they do sign up with that email, it binds to the
+existing record instead of creating a duplicate.
+
+Forgotten passwords are handled by Supabase's password-reset email — click
+"Forgot password?" on the sign-in screen.
+
+
 
 ```bash
 npm install
